@@ -1,1 +1,98 @@
 @import "tailwindcss";
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("./assets/fonts/Montserrat-VariableFont_wght.ttf") format("truetype");
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Space Grotesk";
+  src: url("./assets/fonts/SpaceGrotesk-VariableFont_wght.ttf")
+    format("truetype");
+  font-style: normal;
+}
+
+:root {
+  --color-carbon-black: #191b19;
+  --color-mahogany-red: #a8201a;
+  --color-red: #9f1f19;
+  --color-light-blue: #9dc3c2;
+  --color-royal-gold: #f4d35e;
+  --color-sandy-brown: #ee964b;
+  --color-beige: #e6e6d8;
+  --background-color: var(--color-carbon-black);
+
+  --primary-color: var(--color-sandy-brown);
+  --primary-foreground-color: var(--color-carbon-black);
+
+  --secondary-color: var(--color-light-blue);
+  --secondary-foreground-color: var(--color-carbon-black);
+
+  --accent-color: var(--color-royal-gold);
+  --accent-foreground-color: var(--color-carbon-black);
+
+  --destructive-color: var(--color-mahogany-red);
+  --destructive-foreground-color: var(--color-beige);
+}
+
+@theme {
+  --color-primary: var(--primary-color);
+  --color-primary-foreground: var(--primary-foreground-color);
+
+  --color-secondary: var(--secondary-color);
+  --color-secondary-foreground: var(--secondary-foreground-color);
+
+  --color-accent: var(--accent-color);
+  --color-accent-foreground: var(--accent-foreground-color);
+
+  --color-destructive: var(--destructive-color);
+  --color-destructive-foreground: var(--destructive-foreground-color);
+}
+
+@layer base {
+  body {
+    --content-padding: 2rem;
+
+    background-color: var(--background-color);
+    color: var(--primary-foreground-color);
+
+    font-family: "Space Grotesk", sans-serif;
+    font-style: normal;
+
+    /* height: 100dvh;
+    overflow-y: hidden; */
+  }
+}
+
+@layer components {
+  .section-padding {
+    padding: var(--content-padding);
+  }
+
+  .section-content {
+    @apply rounded-lg;
+  }
+
+  .box {
+    @apply w-32 aspect-square bg-destructive rounded-md;
+  }
+
+  .beige {
+    background-color: var(--color-beige);
+  }
+
+  .orange {
+    @apply bg-primary;
+  }
+
+  .hero {
+    @apply relative isolate;
+
+    & .cover {
+      @apply absolute inset-0 z-10;
+      clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+      will-change: clip-path;
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { gsap } from "gsap";
+import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import type { RefObject } from "react";
@@ -42,12 +42,23 @@ export function useSlideAnimation(
           const animationId =
             items[next].getAttribute("data-animation-id") ?? "default";
 
+          const hidePreviousElement =
+            items[current]?.getAttribute("data-animation-hide") === "true";
+
           const vars: gsap.TweenVars = animations[animationId];
 
           gsap.to(items[next], {
             ...vars,
             duration: 0.5,
             ease: "power3.out",
+            onComplete: () => {
+              if (hidePreviousElement) {
+                gsap.to(items[next - 1], {
+                  autoAlpha: 0,
+                  duration: 0.5,
+                });
+              }
+            },
           });
 
           current = next;

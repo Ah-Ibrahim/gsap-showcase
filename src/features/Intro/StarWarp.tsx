@@ -11,7 +11,7 @@ type Star = {
   hue: number;
 };
 
-const STAR_COUNT = 1200;
+const STAR_COUNT = 3000;
 
 function random(min: number, max: number) {
   return Math.random() * (max - min) + min;
@@ -126,9 +126,9 @@ export default function StarWarp() {
         start: "top top",
         end: "+=300%",
         pin: true,
-        scrub: true,
+        scrub: 2,
         onUpdate(self) {
-          draw(self.progress); // your canvas stars
+          draw(self.progress);
         },
       },
     });

@@ -14,12 +14,12 @@ function GsapIntro() {
       >
         <div className="section-padding h-full cover bg-accent-foreground">
           <div className="bg-white text-primary-foreground h-full p-4 rounded-lg">
-            <h1 className="text-5xl font-bold mb-10 text-blue-500 underline">
+            <h1 className="text-6xl font-bold mb-10 text-blue-500 underline">
               <a className="text-blue-500 underline" ref={linkRef}>
                 Agenda
               </a>
             </h1>
-            <ul className="list-disc list-inside text-xl mt-4 space-y-3">
+            <ul className="list-disc list-inside text-3xl mt-4 space-y-3">
               <li>What is GSAP?</li>
               <li>Why use GSAP?</li>
               <li>Getting Started</li>

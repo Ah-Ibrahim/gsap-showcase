@@ -1,7 +1,7 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import type { RefObject } from "react";
+import { useRef, type RefObject } from "react";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -9,7 +9,9 @@ export function useSlideAnimation(
   container: RefObject<HTMLElement | null>,
   animations: Record<string, gsap.TweenVars>,
 ) {
-  useGSAP(
+  const nextRef = useRef(0);
+
+  const { contextSafe } = useGSAP(
     () => {
       const items = container.current?.querySelectorAll(
         "[data-animation='step']",
@@ -24,50 +26,49 @@ export function useSlideAnimation(
       gsap.set(itemsWithoutBoxes, {
         autoAlpha: 0,
       });
-
-      let current = -1;
-
-      ScrollTrigger.create({
-        trigger: container.current,
-        start: "top top",
-        end: () => "+=" + items.length * window.innerHeight,
-        pin: true,
-        // markers: true,
-
-        onUpdate(self) {
-          const next = Math.floor(self.progress * items.length - 0.5);
-
-          if (next === current) return;
-
-          const animationId =
-            items[next].getAttribute("data-animation-id") ?? "default";
-
-          const hidePreviousElement =
-            items[current]?.getAttribute("data-animation-hide") === "true";
-
-          const vars: gsap.TweenVars = animations[animationId];
-
-          gsap.to(items[next], {
-            ...vars,
-            duration: 0.5,
-            ease: "power3.out",
-            onComplete: () => {
-              if (hidePreviousElement) {
-                gsap.to(items[next - 1], {
-                  autoAlpha: 0,
-                  duration: 0.5,
-                });
-              }
-            },
-          });
-
-          current = next;
-        },
-      });
     },
-
-    {
-      scope: container,
-    },
+    { scope: container, dependencies: [] },
   );
+
+  const handleClick = contextSafe((e: React.PointerEvent<HTMLElement>) => {
+    const items = container.current?.querySelectorAll(
+      "[data-animation='step']",
+    );
+
+    if (!items) return;
+
+    const next = nextRef.current;
+    const animationId =
+      items[next].getAttribute("data-animation-id") ?? "default";
+
+    const hidePreviousElement =
+      items[next - 1]?.getAttribute("data-animation-hide") === "true";
+
+    const vars: gsap.TweenVars = animations[animationId];
+
+    gsap.to(items[next], {
+      ...vars,
+      duration: 0.5,
+      ease: "power3.out",
+      onComplete: () => {
+        if (hidePreviousElement) {
+          gsap.to(items[next - 1], {
+            autoAlpha: 0,
+            duration: 0.5,
+          });
+        }
+      },
+    });
+
+    // e.preventDefault();
+    // if (e.button === 0) {
+    //   console.log("Left click detected");
+    // } else if (e.button === 2) {
+    //   console.log("Right click detected");
+    //   nextRef.current = Math.min(0, next - 1);
+    // }
+    nextRef.current = Math.min(next + 1, items.length - 1);
+  });
+
+  return handleClick;
 }
